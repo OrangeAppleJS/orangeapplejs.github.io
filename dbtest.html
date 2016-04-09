@@ -10,6 +10,7 @@
 	var fdb = new ForerunnerDB();
 	var db = fdb.db("DB Test");
 	studentCollection = db.collection('students');
+	studentCollection.load();
 </script>
 </body>
 </html>
