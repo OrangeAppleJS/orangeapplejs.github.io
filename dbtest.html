@@ -25,10 +25,8 @@
 	var fdb = new ForerunnerDB();
 	var db = fdb.db("DB Test");
 	studentCollection = db.collection('students');
-	studentCollection.load(function(){
-		var studlist = studentCollection.find();
-	});
-	
+	studentCollection.load();
+	var studlist = studentCollection.find();
 	for (var i = 0; i <= 6; i++) {
 		$(".container").append("<tr><td class='inner'>"+studlist[i].age+"</td>"+"<td class='inner'>"+studlist[i].name+"</td></tr>")
 	}
