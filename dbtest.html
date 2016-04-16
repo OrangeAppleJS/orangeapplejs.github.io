@@ -9,7 +9,7 @@
 <table>
 	<thead>
 		<tr>
-			<td>id</td>
+			<td>age</td>
 			<td>姓名</td>
 		</tr>
 	</thead>
@@ -25,12 +25,16 @@
 	var fdb = new ForerunnerDB();
 	var db = fdb.db("DB Test");
 	studentCollection = db.collection('students');
-	studentCollection.load();
-	var studlist = studentCollection.find();
+	studentCollection.load(function(){
+		var studlist = studentCollection.find();
+	});
+	
+	for (var i = 0; i <= 6; i++) {
+		$(".container").append("<tr><td class='inner'>"+studlist[i].age+"</td>"+"<td class='inner'>"+studlist[i].name+"</td></tr>")
+	}
 </script>
 </body>
 </html>
-
 <!--
 var stud = ["Joseph","Edison","Annie","Ian","Evan","David","Kevin"]
 for(var j = 0;j<=10;j++){
