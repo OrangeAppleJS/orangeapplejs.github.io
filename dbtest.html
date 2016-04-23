@@ -13,15 +13,45 @@
 <table class="table table-hover">
 	<thead>
 		<tr>
-			<td>Age</td>
-			<td>姓名</td>
+			<th>#</th>
+			<th>Age</th>
+			<th>姓名</th>
+			<th>更動</th>
 		</tr>
 	</thead>
 	<tbody class="container">
-		<tr>
-		</tr>
 	</tbody>
 </table>
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel">修改學生資料</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="InputRow">#</label>
+            <input type="text" class="form-control" id="InputRow" value="">
+          </div>
+          <div class="form-group">
+            <label for="InputAge">Age</label>
+            <input type="text" class="form-control" id="InputAge" value="">
+          </div>
+          <div class="form-group">
+            <label for="InputName">姓名</label>
+            <input type="text" class="form-control" id="InputName" value="">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+        <button type="button" class="btn btn-primary" onclick="edit()" data-dismiss="modal">儲存</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
 	var fdb = new ForerunnerDB();
 	var db = fdb.db("DB Test");
@@ -29,9 +59,25 @@
 	studentCollection.load(function(){
 		var studlist = studentCollection.find();
 		for (var i = 0; i <= 6; i++) {
-			$(".container").append("<tr><td class='inner'>"+studlist[i].age+"</td>"+"<td class='inner'>"+studlist[i].name+"</td></tr>")
+			row = i + 1
+			$(".container").append("<tr id='row"+row+"'><th scope='row'>"+row+"</th>"+"<td id='row"+row+"-age' class='inner'>"+studlist[i].age+"</td>"+"<td id='row"+row+"-name' class='inner'>"+studlist[i].name+"</td><td><button type='button' class='btn btn-warning' data-toggle='modal' data-target='#EditModal'>修改</button><button type='button' class='btn btn-danger'>刪除</button></td></tr>")
 		}
 	});
+	var edit = function(){
+		var editRow = $("#InputRow").val();
+		var editAge = $("#InputAge").val();
+		var editName = $("#InputName").val();
+		$("#row"+editRow+"-age").empty();
+		$("#row"+editRow+"-age").append(editAge);
+		$("#row"+editRow+"-name").empty();
+		$("#row"+editRow+"-name").append(editName);
+		var newData = {
+    		name: editName,
+    		age: editAge
+		};
+		db.collection("students").updateById(studentCollection._data[editRow - 1]._id,newData);
+		studentCollection.save();
+	}
 </script>
 </body>
 </html>
