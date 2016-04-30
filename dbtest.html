@@ -14,7 +14,7 @@
 	<thead>
 		<tr>
 			<th>#</th>
-			<th>Age</th>
+			<th>Age</th>p
 			<th>姓名</th>
 			<th>更動</th>
 		</tr>
@@ -52,6 +52,25 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel">確定要刪除嗎?</h4>
+      </div>
+      <div class="modal-body">
+        <p>你確定要刪除ID為</p>
+        <div id="DeleteModalID">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="resetdel()" >關閉</button>
+        <button type="button" class="btn btn-danger" id="delbuttoncheck" data-dismiss="modal" onclick="resetdel()" >確定</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
 	var fdb = new ForerunnerDB();
 	var db = fdb.db("DB Test");
@@ -59,8 +78,9 @@
 	studentCollection.load(function(){
 		var studlist = studentCollection.find();
 		for (var i = 0; i <= 6; i++) {
+			var nowID = studentCollection._data[i]._id
 			row = i + 1
-			$(".container").append("<tr id='row"+row+"'><th scope='row'>"+row+"</th>"+"<td id='row"+row+"-age' class='inner'>"+studlist[i].age+"</td>"+"<td id='row"+row+"-name' class='inner'>"+studlist[i].name+"</td><td><button type='button' class='btn btn-warning' data-toggle='modal' data-target='#EditModal'>修改</button><button type='button' class='btn btn-danger'>刪除</button></td></tr>")
+			$(".container").append("<tr id='row"+row+"'><th scope='row'>"+nowID+"</th>"+"<td id='row"+row+"-age' class='inner'>"+studlist[i].age+"</td>"+"<td id='row"+row+"-name' class='inner'>"+studlist[i].name+"</td><td><button type='button' class='btn btn-warning' id='editbutton' data-toggle='modal' data-target='#EditModal' data-id='"+nowID+"'>修改</button><button type='button' class='btn btn-danger' data-toggle='modal' id='delbutton' data-target='#DeleteModal'data-id='"+nowID+"' onclick='delbuttonclick("+row+")' >刪除</button></td></tr>")
 		}
 	});
 	var edit = function(){
@@ -77,6 +97,21 @@
 		};
 		db.collection("students").updateById(studentCollection._data[editRow - 1]._id,newData);
 		studentCollection.save();
+	}
+	var delbuttonclick = function (row) {
+		var DeleteModalID = $("#row"+row+" td button").attr("data-id");
+		$("#DeleteModalID").append("<code>"+DeleteModalID+"</code>")
+		$("#delbuttoncheck").click(function(){
+			studentCollection.remove(
+			{
+				_id: DeleteModalID
+			})
+			studentCollection.save();
+			$("#row"+row).empty();
+		})
+	}
+	var resetdel = function(){
+		$("#DeleteModalID").empty();
 	}
 </script>
 </body>
